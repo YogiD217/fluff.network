@@ -27,4 +27,4 @@ jobs:
       - name: Deploy to Firebase Hosting
         env:
           GOOGLE_APPLICATION_CREDENTIALS: service-account.json
-        run: firebase deploy --only hosting --non-interactive
+        run: firebase deploy --only hosting --project fluff-8790c --non-interactive
