@@ -1,0 +1,30 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main  # or your chosen branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # adjust the version if needed
+
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools
+
+      - name: Create Firebase Service Account File
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > ${GITHUB_WORKSPACE}/firebase-service-account.json
+        shell: bash
+
+      - name: Deploy to Firebase Hosting
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ GITHUB_WORKSPACE }}/firebase-service-account.json
+        run: firebase deploy --only hosting --non-interactive
