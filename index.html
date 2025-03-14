@@ -1,21 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fluff Network</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fluff Network - Login</title>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js"></script>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #auth-container, #app-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    hr {
+      margin: 20px 0;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to Fluff Network</h1>
-    <p>Connect with Purpose</p>
-  </header>
-  <section>
-    <p>This is your website homepage.</p>
-  </section>
-  <footer>
-    <p>&copy; 2025 Fluff Network. All Rights Reserved.</p>
-  </footer>
+  <!-- Authentication Forms -->
+  <div id="auth-container">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" />
+    <input type="password" id="login-password" placeholder="Password" />
+    <button id="login-button">Login</button>
+
+    <hr />
+
+    <h2>Register</h2>
+    <input type="email" id="register-email" placeholder="Email" />
+    <input type="password" id="register-password" placeholder="Password" />
+    <button id="register-button">Register</button>
+  </div>
+
+  <!-- Main App Content (shown after login) -->
+  <div id="app-content" style="display: none;">
+    <h2>Welcome to Fluff Network!</h2>
+    <p>You are logged in.</p>
+    <button id="logout-button">Logout</button>
+  </div>
+
+  <!-- Firebase Initialization and Auth Logic -->
+  <script>
+    // Your specific Firebase config values
+    const firebaseConfig = {
+      apiKey: "AIzaSyBalg3yKATJ7PG_og-1Pthtg_nXgQTwnR0",
+      authDomain: "fluff-8790c.firebaseapp.com",
+      projectId: "fluff-8790c",
+      storageBucket: "fluff-8790c.appspot.com",
+      messagingSenderId: "628219052285",
+      appId: "1:628219052285:web:b01bc1e602b552b8967e94",
+      measurementId: "G-EGXB6GZTMH"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Get references to buttons
+    const loginButton = document.getElementById('login-button');
+    const registerButton = document.getElementById('register-button');
+    const logoutButton = document.getElementById('logout-button');
+
+    // Register new user
+    registerButton.addEventListener('click', () => {
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Registration successful!');
+        })
+        .catch((error) => {
+          alert('Registration error: ' + error.message);
+        });
+    });
+
+    // Log in existing user
+    loginButton.addEventListener('click', () => {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Login successful!');
+        })
+        .catch((error) => {
+          alert('Login error: ' + error.message);
+        });
+    });
+
+    // Log out user
+    logoutButton.addEventListener('click', () => {
+      firebase.auth().signOut()
+        .then(() => {
+          alert('Logged out successfully!');
+        })
+        .catch((error) => {
+          alert('Logout error: ' + error.message);
+        });
+    });
+
+    // Track auth state changes and toggle UI
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in
+        document.getElementById('auth-container').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
+        console.log('User logged in:', user.email);
+      } else {
+        // No user is signed in
+        document.getElementById('auth-container').style.display = 'block';
+        document.getElementById('app-content').style.display = 'none';
+        console.log('No user is signed in.');
+      }
+    });
+  </script>
 </body>
 </html>
