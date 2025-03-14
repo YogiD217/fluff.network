@@ -14,17 +14,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # adjust the version if needed
+          node-version: '16'
 
       - name: Install Firebase Tools
         run: npm install -g firebase-tools
 
+      # Create a file named service-account.json from your secret
       - name: Create Firebase Service Account File
-        run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > ${GITHUB_WORKSPACE}/firebase-service-account.json
-        shell: bash
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > service-account.json
 
+      # Deploy to Firebase using the newly created file
       - name: Deploy to Firebase Hosting
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ GITHUB_WORKSPACE }}/firebase-service-account.json
+          GOOGLE_APPLICATION_CREDENTIALS: service-account.json
         run: firebase deploy --only hosting --non-interactive
