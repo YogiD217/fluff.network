@@ -29,5 +29,5 @@ jobs:
       - name: Verify Authentication
         run: cat $HOME/service-account.json
 
-      - name: Debug: List Firebase Projects
+      - name: Debug:List Firebase Projects
         run: firebase projects:list --non-interactive
